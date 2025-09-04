@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness Coach - Form Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+        
+        .upload-section {
+            padding: 3rem 2rem;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8f9fa;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .upload-area.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-container {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .results-section {
+            display: none;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .score-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .score-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+        
+        .score-excellent { background: linear-gradient(135deg, #28a745, #20c997); }
+        .score-good { background: linear-gradient(135deg, #ffc107, #fd7e14); }
+        .score-poor { background: linear-gradient(135deg, #dc3545, #e83e8c); }
+        
+        .issue-card {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+        }
+        
+        .recommendation-card {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+        }
+        
+        .key-frame {
+            max-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <h1><i class="fas fa-dumbbell"></i> AI Fitness Coach</h1>
+                <p class="lead">Upload your workout video and get instant form analysis from our AI coach</p>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-video fa-2x mb-2"></i>
+                            <h5>Upload Video</h5>
+                            <small>Record your workout and upload</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-brain fa-2x mb-2"></i>
+                            <h5>AI Analysis</h5>
+                            <small>Advanced pose detection & analysis</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line fa-2x mb-2"></i>
+                            <h5>Get Results</h5>
+                            <small>Detailed feedback & recommendations</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3>Upload Your Workout Video</h3>
+                    <p class="text-muted">Drag and drop your video file here, or click to browse</p>
+                    <p class="text-muted"><small>Supported formats: MP4, AVI, MOV, MKV, WEBM (Max 100MB)</small></p>
+                    <input type="file" id="videoFile" accept="video/*" style="display: none;">
+                    <button class="btn btn-primary btn-lg mt-3" onclick="document.getElementById('videoFile').click()">
+                        <i class="fas fa-upload"></i> Choose Video File
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container" id="progressContainer">
+                    <h4>Analyzing your video...</h4>
+                    <div class="progress mb-3">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%" id="progressBar">0%</div>
+                    </div>
+                    <p class="text-muted" id="progressText">Initializing analysis...</p>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection">
+                <h2 class="text-center mb-4">Analysis Results</h2>
+                
+                <!-- Overall Score -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="score-card text-center">
+                            <div class="score-circle" id="overallScoreCircle">0</div>
+                            <h4>Overall Form Score</h4>
+                            <p class="text-muted" id="overallScoreText">Excellent form!</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="score-card text-center">
+                            <div class="score-circle score-good">
+                                <i class="fas fa-dumbbell fa-2x"></i>
+                            </div>
+                            <h4>Exercise Detected</h4>
+                            <p class="text-muted" id="exerciseDetected">Squat</p>
+                            <small class="text-muted">Confidence: <span id="confidenceLevel">95%</span></small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="score-card text-center">
+                            <div class="score-circle score-excellent">
+                                <i class="fas fa-repeat fa-2x"></i>
+                            </div>
+                            <h4>Reps Counted</h4>
+                            <p class="text-muted" id="repCount">12</p>
+                            <small class="text-muted">Estimated from form patterns</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issues and Recommendations -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-exclamation-triangle text-warning"></i> Issues Detected</h4>
+                            <div id="issuesList">
+                                <!-- Issues will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-lightbulb text-info"></i> Recommendations</h4>
+                            <div id="recommendationsList">
+                                <!-- Recommendations will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Frames -->
+                <div class="feature-card mt-4">
+                    <h4><i class="fas fa-images"></i> Key Frames with Form Issues</h4>
+                    <div class="row" id="keyFramesContainer">
+                        <!-- Key frames will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Video Statistics -->
+                <div class="feature-card mt-4">
+                    <h4><i class="fas fa-chart-bar"></i> Video Statistics</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h5 id="videoDuration">0:00</h5>
+                                <small class="text-muted">Duration</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h5 id="framesAnalyzed">0</h5>
+                                <small class="text-muted">Frames Analyzed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h5 id="avgFps">0</h5>
+                                <small class="text-muted">Average FPS</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="text-center">
+                                <h5 id="uploadTime">-</h5>
+                                <small class="text-muted">Upload Time</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg me-3" onclick="analyzeNewVideo()">
+                        <i class="fas fa-upload"></i> Analyze Another Video
+                    </button>
+                    <button class="btn btn-outline-secondary btn-lg" onclick="downloadResults()">
+                        <i class="fas fa-download"></i> Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentResults = null;
+
+        // File upload handling
+        document.getElementById('videoFile').addEventListener('change', handleFileSelect);
+        
+        // Drag and drop handling
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            // Validate file type
+            const allowedTypes = ['video/mp4', 'video/avi', 'video/quicktime', 'video/x-matroska', 'video/webm'];
+            if (!allowedTypes.includes(file.type)) {
+                showError('Please select a valid video file (MP4, AVI, MOV, MKV, or WEBM)');
+                return;
+            }
+
+            // Validate file size (100MB)
+            if (file.size > 100 * 1024 * 1024) {
+                showError('File size must be less than 100MB');
+                return;
+            }
+
+            uploadVideo(file);
+        }
+
+        function uploadVideo(file) {
+            const formData = new FormData();
+            formData.append('video', file);
+
+            // Show progress
+            showProgress();
+            hideError();
+
+            // Simulate progress updates
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                updateProgress(progress, 'Analyzing video frames...');
+            }, 500);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearInterval(progressInterval);
+                updateProgress(100, 'Analysis complete!');
+                
+                if (data.success) {
+                    currentResults = data.analysis;
+                    setTimeout(() => {
+                        hideProgress();
+                        displayResults(data.analysis);
+                    }, 1000);
+                } else {
+                    showError(data.error || 'Upload failed');
+                    hideProgress();
+                }
+            })
+            .catch(error => {
+                clearInterval(progressInterval);
+                showError('Upload failed: ' + error.message);
+                hideProgress();
+            });
+        }
+
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('uploadArea').style.display = 'none';
+        }
+
+        function hideProgress() {
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function updateProgress(percent, text) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressBar').textContent = Math.round(percent) + '%';
+            document.getElementById('progressText').textContent = text;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function displayResults(results) {
+            // Update overall score
+            const score = Math.round(results.overall_score);
+            const scoreCircle = document.getElementById('overallScoreCircle');
+            const scoreText = document.getElementById('overallScoreText');
+            
+            scoreCircle.textContent = score;
+            scoreCircle.className = 'score-circle';
+            
+            if (score >= 80) {
+                scoreCircle.classList.add('score-excellent');
+                scoreText.textContent = 'Excellent form!';
+            } else if (score >= 60) {
+                scoreCircle.classList.add('score-good');
+                scoreText.textContent = 'Good form with room for improvement';
+            } else {
+                scoreCircle.classList.add('score-poor');
+                scoreText.textContent = 'Form needs improvement';
+            }
+
+            // Update exercise detection
+            document.getElementById('exerciseDetected').textContent = 
+                results.exercise_detected.replace('_', ' ').toUpperCase();
+            document.getElementById('confidenceLevel').textContent = 
+                Math.round(results.confidence * 100) + '%';
+
+            // Update rep count
+            document.getElementById('repCount').textContent = results.rep_count;
+
+            // Update issues
+            const issuesList = document.getElementById('issuesList');
+            issuesList.innerHTML = '';
+            if (results.issues_detected && results.issues_detected.length > 0) {
+                results.issues_detected.forEach(issue => {
+                    const issueDiv = document.createElement('div');
+                    issueDiv.className = 'issue-card';
+                    issueDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${issue}`;
+                    issuesList.appendChild(issueDiv);
+                });
+            } else {
+                issuesList.innerHTML = '<p class="text-success"><i class="fas fa-check-circle"></i> No major issues detected!</p>';
+            }
+
+            // Update recommendations
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = '';
+            if (results.recommendations && results.recommendations.length > 0) {
+                results.recommendations.forEach(rec => {
+                    const recDiv = document.createElement('div');
+                    recDiv.className = 'recommendation-card';
+                    recDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${rec}`;
+                    recommendationsList.appendChild(recDiv);
+                });
+            } else {
+                recommendationsList.innerHTML = '<p class="text-info"><i class="fas fa-thumbs-up"></i> Keep up the great form!</p>';
+            }
+
+            // Update key frames
+            const keyFramesContainer = document.getElementById('keyFramesContainer');
+            keyFramesContainer.innerHTML = '';
+            if (results.key_frames && results.key_frames.length > 0) {
+                results.key_frames.forEach(frame => {
+                    const frameDiv = document.createElement('div');
+                    frameDiv.className = 'col-md-3 mb-3';
+                    frameDiv.innerHTML = `
+                        <div class="text-center">
+                            <img src="${frame.image_path}" class="key-frame mb-2" alt="Key frame">
+                            <p class="small text-muted">Score: ${Math.round(frame.score)}/100</p>
+                            <p class="small">${frame.issues[0] || 'Form issue detected'}</p>
+                        </div>
+                    `;
+                    keyFramesContainer.appendChild(frameDiv);
+                });
+            } else {
+                keyFramesContainer.innerHTML = '<p class="text-center text-muted">No key frames with form issues detected</p>';
+            }
+
+            // Update statistics
+            const duration = Math.round(results.video_duration);
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            document.getElementById('videoDuration').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('framesAnalyzed').textContent = results.frames_analyzed;
+            document.getElementById('avgFps').textContent = Math.round(results.fps || 0);
+            
+            const uploadTime = new Date(results.upload_time).toLocaleTimeString();
+            document.getElementById('uploadTime').textContent = uploadTime;
+
+            // Show results section
+            document.getElementById('resultsSection').style.display = 'block';
+        }
+
+        function analyzeNewVideo() {
+            // Reset the interface
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('videoFile').value = '';
+            hideError();
+            currentResults = null;
+        }
+
+        function downloadResults() {
+            if (!currentResults) return;
+            
+            // Create a simple text report
+            const report = `AI Fitness Coach - Form Analysis Report
+
+Exercise Detected: ${currentResults.exercise_detected}
+Confidence: ${Math.round(currentResults.confidence * 100)}%
+Overall Form Score: ${Math.round(currentResults.overall_score)}/100
+Reps Counted: ${currentResults.rep_count}
+
+Issues Detected:
+${currentResults.issues_detected.map(issue => `- ${issue}`).join('\n')}
+
+Recommendations:
+${currentResults.recommendations.map(rec => `- ${rec}`).join('\n')}
+
+Video Statistics:
+- Duration: ${Math.round(currentResults.video_duration)} seconds
+- Frames Analyzed: ${currentResults.frames_analyzed}
+- Average FPS: ${Math.round(currentResults.fps || 0)}
+
+Generated on: ${new Date().toLocaleString()}
+            `;
+            
+            // Download the report
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'fitness-form-analysis.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html> 
