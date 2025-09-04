@@ -1,8 +1,12 @@
-# AI Fitness Coach - Form Analysis Platform
+# AI Fitness Coach
 
-An intelligent AI-powered fitness coaching platform that analyzes workout videos to provide real-time form feedback and personalized recommendations.
+An intelligent AI-powered fitness coaching platform that analyzes workout videos to provide real-time form feedback and personalized recommendations using computer vision and machine learning.
 
-## 🏋️ Features
+## Overview
+
+AI Fitness Coach leverages advanced pose detection technology to analyze exercise form and provide actionable feedback. The platform supports multiple exercise types and delivers comprehensive biomechanical analysis to help users improve their workout technique.
+
+## Features
 
 ### Core Capabilities
 - **Real-time Pose Detection**: Advanced MediaPipe integration for accurate body landmark tracking
@@ -26,7 +30,7 @@ An intelligent AI-powered fitness coaching platform that analyzes workout videos
 - **Error Handling**: Robust error management and graceful degradation
 - **Performance Optimization**: Efficient frame processing for large video files
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -62,7 +66,7 @@ For real-time pose tracking with voice coaching:
 python pose_tracker.py
 ```
 
-## 📊 How It Works
+## How It Works
 
 ### 1. Video Processing
 - Upload workout video (MP4, AVI, MOV, MKV, WEBM)
@@ -92,7 +96,7 @@ python pose_tracker.py
 - Performance statistics and trends
 - Downloadable results for progress tracking
 
-## 🎯 Supported Exercises
+## Supported Exercises
 
 ### Squats
 - **Analysis**: Knee angles, hip hinge, torso lean, stance width
@@ -114,7 +118,7 @@ python pose_tracker.py
 - **Issues Detected**: Hip sagging, poor alignment, instability
 - **Recommendations**: Core engagement, proper alignment
 
-## 🏗️ Architecture
+## Architecture
 
 ### Core Components
 
@@ -149,7 +153,7 @@ python pose_tracker.py
 - **Voice**: pyttsx3 for text-to-speech
 - **Deployment**: Gunicorn, Docker-ready
 
-## 📈 Performance Metrics
+## Performance Metrics
 
 ### Accuracy Benchmarks
 - **Exercise Detection**: 90-95% accuracy
@@ -163,7 +167,7 @@ python pose_tracker.py
 - **Resolution**: Up to 4K (optimized for 1080p)
 - **Duration**: No limit (processing time scales with length)
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 ```bash
@@ -186,7 +190,7 @@ VOICE_RATE=180
 - **Voice Coaching**: Customize feedback in `smart_coach.py`
 - **UI Design**: Modify templates in `templates/` directory
 
-## 🚀 Deployment
+## Deployment
 
 ### Local Development
 ```bash
@@ -209,7 +213,7 @@ docker run -p 5000:5000 ai-fitness-coach
 - **Google Cloud**: Works with App Engine and Cloud Run
 - **Azure**: Compatible with App Service
 
-## 📊 API Endpoints
+## API Endpoints
 
 ### Web Interface
 - `GET /` - Main upload interface
@@ -235,7 +239,7 @@ docker run -p 5000:5000 ai-fitness-coach
 }
 ```
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Setup
 1. Fork the repository
@@ -251,18 +255,18 @@ docker run -p 5000:5000 ai-fitness-coach
 - **Advanced Analytics**: Machine learning for personalized insights
 - **Integration**: Connect with fitness trackers and apps
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **MediaPipe**: Google's pose detection technology
 - **OpenCV**: Computer vision library
 - **Bootstrap**: Frontend framework
 - **Flask**: Web framework
 
-## 📞 Support
+## Support
 
 For questions, issues, or feature requests:
 - Create an issue on GitHub
@@ -271,4 +275,4 @@ For questions, issues, or feature requests:
 
 ---
 
-**Built with ❤️ for the fitness community** 
+Built for the fitness community

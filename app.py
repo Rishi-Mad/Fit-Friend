@@ -199,7 +199,12 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    """Main application page - serve React frontend"""
+    try:
+        return send_file('../static/dist/index.html')
+    except FileNotFoundError:
+        # Fallback to template if React build doesn't exist
+        return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_video():
@@ -302,6 +307,21 @@ def api_docs():
         }
     }
     return jsonify(docs)
+
+# Register API blueprint
+try:
+    from api.routes import api
+    app.register_blueprint(api)
+except ImportError:
+    print("API blueprint not available")
+
+@app.route('/<path:path>')
+def serve_react(path):
+    """Serve React app for all other routes"""
+    try:
+        return send_file('../static/dist/index.html')
+    except FileNotFoundError:
+        return jsonify({'error': 'Frontend not built'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000) 
