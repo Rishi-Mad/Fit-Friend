@@ -207,12 +207,6 @@ docker build -t ai-fitness-coach .
 docker run -p 5000:5000 ai-fitness-coach
 ```
 
-### Cloud Deployment
-- **Heroku**: Ready for Heroku deployment
-- **AWS**: Compatible with EC2 and Lambda
-- **Google Cloud**: Works with App Engine and Cloud Run
-- **Azure**: Compatible with App Service
-
 ## API Endpoints
 
 ### Web Interface
@@ -265,14 +259,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **OpenCV**: Computer vision library
 - **Bootstrap**: Frontend framework
 - **Flask**: Web framework
-
-## Support
-
-For questions, issues, or feature requests:
-- Create an issue on GitHub
-- Check the documentation
-- Review the demo page for examples
-
 ---
 
 Built for the fitness community
