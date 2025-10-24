@@ -1,4 +1,4 @@
-# AI Fitness Coach
+# Fit Friend
 
 An intelligent AI-powered fitness coaching platform that analyzes workout videos to provide real-time form feedback and personalized recommendations using computer vision and machine learning.
 
